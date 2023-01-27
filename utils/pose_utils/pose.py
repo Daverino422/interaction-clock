@@ -2,6 +2,7 @@ import random
 import cv2
 import mediapipe as mp
 from mediapipe.python.solutions.drawing_utils import _normalized_to_pixel_coordinates
+import numpy as np
 
 from utils.operation_utils import Operation
 from utils.timer_utils import Timer
@@ -146,6 +147,9 @@ class Pose():
 
             self.test_timer.update()
 
+            if self.test_timer.alarm_should_ring:
+                self.test_timer.playAlarmSound()
+
             if results.pose_landmarks is not None:
                 self.key_points = self.get_keypoints(image, results)
                 self.test_timer.in_frame = True
@@ -165,19 +169,37 @@ class Pose():
 
             ll = self.one_line_angle("left_foot_index", "left_ankle")
             if ll is not None and ll != -1 and ll >= 0:
-                self.test_timer.swapPeriod()
+                if self.test_timer.can_set_time:
+                    self.test_timer.swapPeriod()
+                else:
+                    if self.test_timer.alarm_should_ring:
+                        self.test_timer.stopAlarm()
 
             rr = self.one_line_angle("right_foot_index", "right_ankle")
             if rr is not None and rr != -1 and rr >= 0:
-                self.test_timer.setTimer(hour, minute)
+                if self.test_timer.can_set_time:
+                    self.test_timer.setTimer(hour, minute)
+                else:
+                    if self.test_timer.alarm_should_ring is not True:
+                        self.test_timer.clearTimer()
 
             image = self.draw.pose_text(image, str(hour) + ":" + str(minute) + self.test_timer.period)
 
             if self.test_timer.alarm_time != "NONE":
                 image = self.draw.actionText(image, "Set timer: " + self.test_timer.alarm_time)
 
+            # When timer is set, left foot to chest = stop timer, able to update timer
+            # Allows use of right foot for other functionality
+
+            img = cv2.imread("clock.png", cv2.IMREAD_UNCHANGED)
+            img = cv2.resize(img, (self.width, self.height))
+
+            image = np.where((img[..., 3] < 128)[..., None], image, img[..., 0:3])
+
             out.write(image)
             cv2.imshow('Intractable Clock', image)
             if cv2.waitKey(5) & 0xFF == 27:
                 break
+
+
         self.video_reader.release()

@@ -16,14 +16,19 @@ class TestTimer:
         self.should_add = False
         self.has_added = False
         self.can_set_time = True
+        self.alarm_should_ring = False
 
     def update(self):
         if datetime.datetime.now().strftime("%H:%M:%S") == self.alarm_time and self.has_printed is False:
             self.has_printed = True
-            winsound.PlaySound("sound.mp3", winsound.SND_ASYNC)
+            self.alarm_should_ring = True
 
             if self.in_frame is True:
                 self.should_add = True
+
+    def playAlarmSound(self):
+        winsound.PlaySound("sound.mp3", winsound.SND_ASYNC)
+        print("pLAYING THE FUCKING SOUND")
 
     def addTimeToAlarm(self):
         if self.has_added is False:
@@ -52,5 +57,21 @@ class TestTimer:
         if self.alarm_time_last_changed != -1 and (self.alarm_time_last_changed + self.period_cooldown) > datetime.datetime.now().timestamp():
             return
 
+        self.can_set_time = False
+
         self.alarm_time = datetime.time(hour, minute).strftime("%H:%M:%S")
         self.alarm_time_last_changed = datetime.datetime.now().timestamp()
+
+    def clearTimer(self):
+        if self.alarm_time_last_changed != -1 and (self.alarm_time_last_changed + self.period_cooldown) > datetime.datetime.now().timestamp():
+            return
+
+        self.alarm_time = ''
+        self.alarm_time_last_changed = datetime.datetime.now().timestamp()
+        self.can_set_time = True
+
+    def stopAlarm(self):
+        self.alarm_should_ring = False
+        self.clearTimer()
+        print("STOPPING THE FUCKING ALARM")
+
