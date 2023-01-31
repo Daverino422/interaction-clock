@@ -34,7 +34,8 @@ class TestTimer:
 
     def playOnce(self):
         if not self.soundPlayed:
-            winsound.PlaySound('./alarm_clock.wav', winsound.SND_ASYNC)
+            for x in range(6):
+                winsound.PlaySound('./alarm_clock.wav', winsound.SND_ASYNC)
             self.soundPlayed = True
 
     def addTimeToAlarm(self):
@@ -68,7 +69,11 @@ class TestTimer:
 
         self.can_set_time = False
 
-        self.alarm_time = datetime.time(hour, minute).strftime("%H:%M:%S")
+        if self.testMode:
+            self.alarm_time = datetime.datetime.fromtimestamp(time.time() + 10).strftime("%H:%M:%S")
+        else:
+            self.alarm_time = datetime.time(hour, minute).strftime("%H:%M:%S")
+
         self.alarm_time_last_changed = datetime.datetime.now().timestamp()
 
     def clearTimer(self):

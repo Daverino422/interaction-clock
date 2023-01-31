@@ -43,7 +43,7 @@ class Draw():
         """ Draw overlay in image """
         alpha = 0.5
         overlay = image.copy()
-        cv2.rectangle(overlay, (0, self.height // 16), (self.width, self.height // 8), (25, 25, 25), -1)
+        cv2.rectangle(overlay, (0, 700 // 16), (self.width, 900 // 8), (25, 25, 25), -1)
         image = cv2.addWeighted(overlay, alpha, image, 1 - alpha, 0)
         return image
 

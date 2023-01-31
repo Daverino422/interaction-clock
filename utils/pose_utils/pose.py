@@ -14,6 +14,22 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+#testvalue = ''
+#
+#
+#def test():
+#    print(testValue)
+#
+#
+#def nothing(x):
+#    print('hi')
+#    test()
+#
+#
+#cv2.namedWindow('controls')
+#
+#cv2.createTrackbar('r', 'controls', 15, 255, nothing)
+#testValue = int(cv2.getTrackbarPos('r', 'controls'))
 
 
 class Pose():
