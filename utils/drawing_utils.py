@@ -14,7 +14,7 @@ class Draw():
     def __init__(self, width, height) -> None:
         self.width = width
         self.height = height
-        self.font = ImageFont.truetype('../data/fonts/arial.ttf', self.height // 24, encoding="unic")
+        self.font = ImageFont.truetype('../data/fonts/arial.ttf', self.height // 15, encoding="unic")
 
     def bbox(self):
         """ Draw bbox """
